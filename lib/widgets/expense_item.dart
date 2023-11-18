@@ -12,7 +12,10 @@ class ExpenseItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           children: [
-            Text(expense.name),
+            Text(
+              expense.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             Row(
               children: [
                 // String Interpolation

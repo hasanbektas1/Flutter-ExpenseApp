@@ -1,33 +1,24 @@
-import 'package:expenseapp/models/expense.dart';
+import 'package:expenseapp/data/expenses.dart';
 import 'package:expenseapp/widgets/expense_item.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseList extends StatefulWidget {
-  const ExpenseList({super.key});
+  const ExpenseList({Key? key}) : super(key: key);
 
   @override
-  State<ExpenseList> createState() => _ExpenseListState();
+  _ExpenseListState createState() => _ExpenseListState();
 }
 
 class _ExpenseListState extends State<ExpenseList> {
-  // dummy data => Örnek veri
-  final List<Expense> expenses = [
-    Expense(
-        name: "Yiyecek",
-        price: 200,
-        date: DateTime.now(),
-        category: Category.food),
-    Expense(
-        name: "Flutter Udemy Course",
-        price: 100,
-        date: DateTime.now(),
-        category: Category.education),
-    Expense(
-        name: "Galata Kulesi",
-        price: 150,
-        date: DateTime.now(),
-        category: Category.travel),
-  ]; // firebase,veritabanı
+  // Her 4 liste elemanına farklı renk atandı
+  final _colors = [
+    Colors.amber,
+    Colors.red,
+    Colors.blue,
+    Colors.yellow,
+  ];
+
+  // BLoC Pattern
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -36,7 +27,7 @@ class _ExpenseListState extends State<ExpenseList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 150,
+            height: 250,
             child: Text("Grafik"),
           ),
           Expanded(
@@ -44,10 +35,8 @@ class _ExpenseListState extends State<ExpenseList> {
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 5,
-                    color: const Color.fromARGB(255, 87, 174, 246),
+                    elevation: 15,
+                    color: _colors[index % _colors.length],
                     child: ExpenseItem(expenses[index]));
               },
             ),
