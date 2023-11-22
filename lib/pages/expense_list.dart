@@ -1,9 +1,14 @@
 import 'package:expenseapp/data/expenses.dart';
+import 'package:expenseapp/models/expense.dart';
 import 'package:expenseapp/widgets/expense_item.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseList extends StatefulWidget {
-  const ExpenseList({Key? key}) : super(key: key);
+  const ExpenseList(this.onRemove, this.undoRemove, {Key? key})
+      : super(key: key);
+
+  final void Function(Expense expense) onRemove;
+  final void Function(int index, Expense expense) undoRemove;
 
   @override
   _ExpenseListState createState() => _ExpenseListState();
@@ -18,7 +23,6 @@ class _ExpenseListState extends State<ExpenseList> {
     Colors.yellow,
   ];
 
-  // BLoC Pattern
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -35,9 +39,29 @@ class _ExpenseListState extends State<ExpenseList> {
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 return Card(
-                    elevation: 15,
-                    color: _colors[index % _colors.length],
-                    child: ExpenseItem(expenses[index]));
+                  elevation: 15,
+                  color: _colors[index % _colors.length],
+                  child: Dismissible(
+                    key: ValueKey(expenses[index]),
+                    child: ExpenseItem(expenses[index]),
+                    onDismissed: (direction) {
+                      var removeExpense = expenses[index];
+                      var removeExpenseIndex = index;
+
+                      widget.onRemove(expenses[index]);
+                      var snackBar = SnackBar(
+                        action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              widget.undoRemove(
+                                  removeExpenseIndex, removeExpense);
+                            }),
+                        content: Text("Deleted: ${removeExpense.name}"),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
+                  ),
+                );
               },
             ),
           ),

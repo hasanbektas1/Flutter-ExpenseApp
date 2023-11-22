@@ -19,11 +19,24 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void removeExpense(Expense expense) {
+    setState(() {
+      // Listeden veri silmek
+      expenses.remove(expense);
+    });
+  }
+
+  void undoRemoveExpense(int index, Expense expense) {
+    setState(() {
+      // Listeden silinen veriyi geri eklemek
+      expenses.insert(index, expense);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
         title: const Text("Expense App"),
         actions: [
           IconButton(
@@ -37,7 +50,7 @@ class _MainPageState extends State<MainPage> {
               icon: const Icon(Icons.add)),
         ],
       ),
-      body: ExpenseList(),
+      body: ExpenseList(removeExpense, undoRemoveExpense),
     );
   }
 }
